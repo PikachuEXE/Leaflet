@@ -996,6 +996,7 @@ export var Map = Evented.extend({
 	// Inverse of [`project`](#map-project).
 	unproject: function (point, zoom) {
 		zoom = zoom === undefined ? this._zoom : zoom;
+		if (window.Sentry != null) { Sentry.setExtra("zoom", zoom) };
 		return this.options.crs.pointToLatLng(toPoint(point), zoom);
 	},
 
@@ -1004,6 +1005,7 @@ export var Map = Evented.extend({
 	// returns the corresponding geographical coordinate (for the current zoom level).
 	layerPointToLatLng: function (point) {
 		var projectedPoint = toPoint(point).add(this.getPixelOrigin());
+		if (window.Sentry != null) { Sentry.setExtra("projectedPoint", projectedPoint) };
 		return this.unproject(projectedPoint);
 	},
 
@@ -1428,11 +1430,16 @@ export var Map = Evented.extend({
 		};
 
 		if (e.type !== 'keypress' && e.type !== 'keydown' && e.type !== 'keyup') {
+			if (window.Sentry != null) { Sentry.getCurrentHub().pushScope() };
 			var isMarker = target.getLatLng && (!target._radius || target._radius <= 10);
 			data.containerPoint = isMarker ?
 				this.latLngToContainerPoint(target.getLatLng()) : this.mouseEventToContainerPoint(e);
+			if (window.Sentry != null) { Sentry.setExtra("data.containerPoint", data.containerPoint) };
 			data.layerPoint = this.containerPointToLayerPoint(data.containerPoint);
+			if (window.Sentry != null) { Sentry.setExtra("data.layerPoint", data.layerPoint) };
 			data.latlng = isMarker ? target.getLatLng() : this.layerPointToLatLng(data.layerPoint);
+			if (window.Sentry != null) { Sentry.setExtra("data.latlng", data.latlng) };
+			if (window.Sentry != null) { Sentry.getCurrentHub().popScope() };
 		}
 
 		for (var i = 0; i < targets.length; i++) {

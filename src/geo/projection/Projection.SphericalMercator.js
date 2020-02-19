@@ -32,6 +32,9 @@ export var SphericalMercator = {
 	unproject: function (point) {
 		var d = 180 / Math.PI;
 
+		if (window.Sentry != null) { Sentry.setExtra("point", point) };
+		if (window.Sentry != null) { Sentry.setExtra("this.R", this.R) };
+
 		return new LatLng(
 			(2 * Math.atan(Math.exp(point.y / this.R)) - (Math.PI / 2)) * d,
 			point.x * d / this.R);
