@@ -1,9 +1,9 @@
 /* @preserve
- * Leaflet 1.6.0+debug/invalid-lat-lng-object.2d1a6d8, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.6.0+debug/invalid-lat-lng-object.7a58a01, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
-var version = "1.6.0+debug/invalid-lat-lng-object.2d1a6d81";
+var version = "1.6.0+debug/invalid-lat-lng-object.7a58a01e";
 
 /*
  * @namespace Util
@@ -1502,8 +1502,8 @@ var CRS = {
 		var scale = this.scale(zoom),
 		    untransformedPoint = this.transformation.untransform(point, scale);
 
-		if (window.Sentry != null) { Sentry.setExtra("scale", scale); }
-		if (window.Sentry != null) { Sentry.setExtra("untransformedPoint", untransformedPoint); }
+		if (window.Sentry != null) { Sentry.setExtra("geo/crs/CRS.js#pointToLatLng -> scale", scale); }
+		if (window.Sentry != null) { Sentry.setExtra("geo/crs/CRS.js#pointToLatLng -> untransformedPoint", untransformedPoint); }
 		return this.projection.unproject(untransformedPoint);
 	},
 
@@ -1665,8 +1665,8 @@ var SphericalMercator = {
 	unproject: function (point) {
 		var d = 180 / Math.PI;
 
-		if (window.Sentry != null) { Sentry.setExtra("point", point); }
-		if (window.Sentry != null) { Sentry.setExtra("this.R", this.R); }
+		if (window.Sentry != null) { Sentry.setExtra("geo/projection/Projection.SphericalMercator#unproject -> point", point); }
+		if (window.Sentry != null) { Sentry.setExtra("geo/projection/Projection.SphericalMercator#unproject -> this.R", this.R); }
 
 		return new LatLng(
 			(2 * Math.atan(Math.exp(point.y / this.R)) - (Math.PI / 2)) * d,
@@ -2816,12 +2816,21 @@ function stop(e) {
 // Gets normalized mouse position from a DOM event relative to the
 // `container` (border excluded) or to the whole page if not specified.
 function getMousePosition(e, container) {
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container", container); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientX", e.clientX); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientY", e.clientY); }
+
 	if (!container) {
 		return new Point(e.clientX, e.clientY);
 	}
 
 	var scale = getScale(container),
 	    offset = scale.boundingClientRect; // left and top  values are in page scale (like the event clientX/Y)
+
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> scale", scale); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> offset", offset); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container.clientLeft", container.clientLeft); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container.clientTop", container.clientTop); }
 
 	return new Point(
 		// offset.left/top values are in page scale (like clientX/Y),
@@ -4008,7 +4017,7 @@ var Map = Evented.extend({
 	// Inverse of [`project`](#map-project).
 	unproject: function (point, zoom) {
 		zoom = zoom === undefined ? this._zoom : zoom;
-		if (window.Sentry != null) { Sentry.setExtra("zoom", zoom); }
+		if (window.Sentry != null) { Sentry.setExtra("map/Map#unproject -> zoom", zoom); }
 		return this.options.crs.pointToLatLng(toPoint(point), zoom);
 	},
 
@@ -4017,7 +4026,7 @@ var Map = Evented.extend({
 	// returns the corresponding geographical coordinate (for the current zoom level).
 	layerPointToLatLng: function (point) {
 		var projectedPoint = toPoint(point).add(this.getPixelOrigin());
-		if (window.Sentry != null) { Sentry.setExtra("projectedPoint", projectedPoint); }
+		if (window.Sentry != null) { Sentry.setExtra("map/Map#layerPointToLatLng -> projectedPoint", projectedPoint); }
 		return this.unproject(projectedPoint);
 	},
 
@@ -4444,13 +4453,14 @@ var Map = Evented.extend({
 		if (e.type !== 'keypress' && e.type !== 'keydown' && e.type !== 'keyup') {
 			if (window.Sentry != null) { Sentry.getCurrentHub().pushScope(); }
 			var isMarker = target.getLatLng && (!target._radius || target._radius <= 10);
+			if (window.Sentry != null) { Sentry.setExtra("map/Map#_fireDOMEvent -> isMarker", isMarker); }
 			data.containerPoint = isMarker ?
 				this.latLngToContainerPoint(target.getLatLng()) : this.mouseEventToContainerPoint(e);
-			if (window.Sentry != null) { Sentry.setExtra("data.containerPoint", data.containerPoint); }
+			if (window.Sentry != null) { Sentry.setExtra("map/Map#_fireDOMEvent -> data.containerPoint", data.containerPoint); }
 			data.layerPoint = this.containerPointToLayerPoint(data.containerPoint);
-			if (window.Sentry != null) { Sentry.setExtra("data.layerPoint", data.layerPoint); }
+			if (window.Sentry != null) { Sentry.setExtra("map/Map#_fireDOMEvent -> data.layerPoint", data.layerPoint); }
 			data.latlng = isMarker ? target.getLatLng() : this.layerPointToLatLng(data.layerPoint);
-			if (window.Sentry != null) { Sentry.setExtra("data.latlng", data.latlng); }
+			if (window.Sentry != null) { Sentry.setExtra("map/Map#_fireDOMEvent -> data.latlng", data.latlng); }
 			if (window.Sentry != null) { Sentry.getCurrentHub().popScope(); }
 		}
 
