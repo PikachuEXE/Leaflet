@@ -38,8 +38,8 @@ export var CRS = {
 		var scale = this.scale(zoom),
 		    untransformedPoint = this.transformation.untransform(point, scale);
 
-		if (window.Sentry != null) { Sentry.setExtra("scale", scale) };
-		if (window.Sentry != null) { Sentry.setExtra("untransformedPoint", untransformedPoint) };
+		if (window.Sentry != null) { Sentry.setExtra("geo/crs/CRS.js#pointToLatLng -> scale", scale) };
+		if (window.Sentry != null) { Sentry.setExtra("geo/crs/CRS.js#pointToLatLng -> untransformedPoint", untransformedPoint) };
 		return this.projection.unproject(untransformedPoint);
 	},
 

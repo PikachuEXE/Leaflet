@@ -217,12 +217,21 @@ export function stop(e) {
 // Gets normalized mouse position from a DOM event relative to the
 // `container` (border excluded) or to the whole page if not specified.
 export function getMousePosition(e, container) {
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container", container) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientX", e.clientX) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientY", e.clientY) };
+
 	if (!container) {
 		return new Point(e.clientX, e.clientY);
 	}
 
 	var scale = getScale(container),
 	    offset = scale.boundingClientRect; // left and top  values are in page scale (like the event clientX/Y)
+
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> scale", scale) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> offset", offset) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container.clientLeft", container.clientLeft) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container.clientTop", container.clientTop) };
 
 	return new Point(
 		// offset.left/top values are in page scale (like clientX/Y),
