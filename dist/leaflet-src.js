@@ -1,5 +1,5 @@
 /* @preserve
- * Leaflet 1.6.0+debug/invalid-lat-lng-object.7a58a01, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.6.0+debug/invalid-lat-lng-object.f891415, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
@@ -9,7 +9,7 @@
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.6.0+debug/invalid-lat-lng-object.7a58a01e";
+var version = "1.6.0+debug/invalid-lat-lng-object.f8914151";
 
 /*
  * @namespace Util
@@ -2823,6 +2823,8 @@ function stop(e) {
 // `container` (border excluded) or to the whole page if not specified.
 function getMousePosition(e, container) {
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container", container); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e", e); }
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.type", e.type); }
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientX", e.clientX); }
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientY", e.clientY); }
 

@@ -218,6 +218,8 @@ export function stop(e) {
 // `container` (border excluded) or to the whole page if not specified.
 export function getMousePosition(e, container) {
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> container", container) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e", e) };
+	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.type", e.type) };
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientX", e.clientX) };
 	if (window.Sentry != null) { Sentry.setExtra("dom/DomEvent#getMousePosition -> e.clientY", e.clientY) };
 
